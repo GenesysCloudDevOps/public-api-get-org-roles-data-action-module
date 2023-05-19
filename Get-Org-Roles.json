@@ -1,0 +1,64 @@
+{
+  "name": "Get Org Roles",
+  "integrationType": "purecloud-data-actions",
+  "actionType": "custom",
+  "config": {
+    "request": {
+      "requestUrlTemplate": "/api/v2/authorization/roles?pageSize=100&pageNumber=${input.pageNumber}",
+      "requestType": "GET",
+      "headers": {},
+      "requestTemplate": "${input.rawRequest}"
+    },
+    "response": {
+      "translationMap": {
+        "ids": "$.entities..id",
+        "pageCount": "$.pageCount",
+        "names": "$.entities..name"
+      },
+      "translationMapDefaults": {
+        "ids": "[]",
+        "pageCount": "0",
+        "names": "[]"
+      },
+      "successTemplate": "{ \"roleIds\": ${ids}, \"roleNames\": ${names}, \"pageCount\": ${pageCount} }"
+    }
+  },
+  "contract": {
+    "input": {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "default": "1",
+            "type": "integer"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "output": {
+      "successSchema": {
+        "type": "object",
+        "properties": {
+          "roleIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "roleNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pageCount": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "secure": false
+}
